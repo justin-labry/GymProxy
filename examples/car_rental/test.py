@@ -43,7 +43,8 @@ def main():
     env = gym.make(id='CarRental-v0', config=config)
     for i in range(0, NUM_EPISODES):
         j = 0
-        _ = env.reset()
+        tmp = env.reset()
+        log_reset(0, 0, tmp)
         while True:
             env.render()
             action = env.action_space.sample()  # Means random agent.
@@ -79,6 +80,24 @@ def log_step(episode: int, step: int, obs: np.ndarray, reward: float, done: bool
     result_str = step_str + obs_str + reward_str + done_str + info_str + action_str
     logger.info(result_str)
 
+def log_reset(episode: int, step: int, obs: np.ndarray):
+    """Utility function for printing logs.
+
+    :param episode: Episode number.
+    :param step: Time-step.
+    :param obs: Observation of the current environment.
+    :param reward: Reward from the current environment.
+    :param done: Indicates whether the episode ends or not.
+    :param info: Contains auxiliary diagnostic information (helpful for debugging, and sometimes learning).
+    :param action: An action provided by the agent.
+    """
+    capital1 = obs[0].item()
+    capital2 = obs[1].item()
+    step_str = '{}-th step in {}-th episode / '.format(step, episode)
+    obs_str = 'obs: ({}, {})  '.format(capital1, capital2)
+
+    result_str = step_str + obs_str
+    logger.info(result_str)
 
 if __name__ == "__main__":
     main()

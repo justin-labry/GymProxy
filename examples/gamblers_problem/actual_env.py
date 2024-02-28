@@ -28,9 +28,11 @@ class GamblersProblemActualEnv(BaseActualEnv):
             initial_capital (float): Initial capital.
             winning_capital (float): Capital for winning the game.
         """
+        print("class GamblersProblemActualEnv(BaseActualEnv): __init__")
         env_proxy = kwargs['env_proxy']
         BaseActualEnv.__init__(self, env_proxy)
         config = kwargs['config']
+        print("config:", config)
         self._num_steps = config['num_steps']
         self._p_h = config['prob_head']
         self._s = config['initial_capital']
@@ -38,12 +40,16 @@ class GamblersProblemActualEnv(BaseActualEnv):
         self._reward = 0.
         self._t = 0
 
+        # self.seed = kwargs['seed']
+        # self.options = kwargs['options']
+
     def run(self, **kwargs):
         """Runs gambler's problem environment.
 
         :param kwargs: Dictionary of keyword arguments.
         """
         try:
+            print("class GamblersProblemActualEnv(BaseActualEnv): run1")
             done = False
             info = {}
             while self._t < self._num_steps and not done:
@@ -77,6 +83,7 @@ class GamblersProblemActualEnv(BaseActualEnv):
             obs = np.array([self._s], dtype=np.float)
             done = True
             GamblersProblemActualEnv.set_obs_and_reward(obs, self._reward, done, info)
+            print("class GamblersProblemActualEnv(BaseActualEnv): run2")
 
         # Exception handling block.
         except TerminateGymProxy:

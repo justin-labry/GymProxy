@@ -3,7 +3,22 @@
 """Testing script for GamblersProblem environment implemented based on the following reference:
 R. S. Sutton and A. G. Barto, Reinforcement Learning - An Introduction, 2nd ed., 2018 (Example 4.3: Gambler's problem).
 """
+"""
+/home/labry/GymProxy/venv/bin/python /home/labry/GymProxy/examples/gamblers_problem/test.py 
+[15:25:28 2024-02-23|INFO|main] 0-th step in 0-th episode / obs: 20 / reward: 0.0 / done: False / info: {'flip_result': 'head'} / action: 10
+[15:25:28 2024-02-23|INFO|main] 1-th step in 0-th episode / obs: 40 / reward: 0.0 / done: False / info: {'flip_result': 'head'} / action: 20
+[15:25:28 2024-02-23|INFO|main] 2-th step in 0-th episode / obs: 35 / reward: 0.0 / done: False / info: {'flip_result': 'tail'} / action: 5
+[15:25:28 2024-02-23|INFO|main] 3-th step in 0-th episode / obs: 46 / reward: 0.0 / done: False / info: {'flip_result': 'head'} / action: 11
+[15:25:28 2024-02-23|INFO|main] 4-th step in 0-th episode / obs: 0.0 / reward: 0.0 / done: True / info: {'flip_result': 'tail', 'msg': 'Loses the game due to out of money.'} / action: 46
 
+/home/labry/GymProxy/venv/bin/python /home/labry/GymProxy/examples/gamblers_problem/test.py 
+[15:26:51 2024-02-23|INFO|main] 0-th step in 0-th episode / obs: 20 / reward: 0.0 / done: False / info: {'flip_result': 'head'} / action: 10
+[15:26:51 2024-02-23|INFO|main] 1-th step in 0-th episode / obs: 40 / reward: 0.0 / done: False / info: {'flip_result': 'head'} / action: 20
+[15:26:51 2024-02-23|INFO|main] 2-th step in 0-th episode / obs: 80 / reward: 0.0 / done: False / info: {'flip_result': 'head'} / action: 40
+[15:26:51 2024-02-23|INFO|main] 3-th step in 0-th episode / obs: 65 / reward: 0.0 / done: False / info: {'flip_result': 'tail'} / action: 15
+[15:26:51 2024-02-23|INFO|main] 4-th step in 0-th episode / obs: 100.0 / reward: 1.0 / done: True / info: {'flip_result': 'head', 'msg': 'Wins the game because the capital becomes 100 dollars.'} / action: 65
+
+"""
 import logging
 import numpy as np
 
@@ -33,21 +48,23 @@ def main():
               'initial_capital': INITIAL_CAPITAL,
               'winning_capital': WINNING_CAPITAL}
     env = gym.make(id='GamblersProblem-v0', config=config)
-    for i in range(0, NUM_EPISODES):
-        j = 0
-        obs = env.reset()
-        while True:
-            env.render()
-            action = env.action_space.sample()  # Means random agent
-
-            # Amount of betting should be less than current capital.
-            action[0] = min(action[0].item(), obs[0].item())
-
-            obs, reward, done, info = env.step(action)
-            log_step(i, j, obs, reward, done, info, action)
-            j = j + 1
-            if done:
-                break
+    # obs = env.reset()
+    # for i in range(0, NUM_EPISODES):
+    #     j = 0
+    #     obs,info = env.reset()
+    #     log_reset(0, 0, obs)
+    #     while True:
+    #         env.render()
+    #         action = env.action_space.sample()  # Means random agent
+    #
+    #         # Amount of betting should be less than current capital.
+    #         action[0] = min(action[0].item(), obs[0].item())
+    #
+    #         obs, reward, terminated, trucated, info = env.step(action)
+    #         log_step(i, j, obs, reward, terminated, info, action)
+    #         j = j + 1
+    #         if terminated:
+    #             break
     env.close()
 
 
@@ -71,6 +88,24 @@ def log_step(episode: int, step: int, obs: np.ndarray, reward: float, done: bool
     info_str = 'info: {} / '.format(info)
     action_str = 'action: {}'.format(bet)
     result_str = step_str + obs_str + reward_str + done_str + info_str + action_str
+    logger.info(result_str)
+
+def log_reset(episode: int, step: int, obs: np.ndarray):
+    """Utility function for printing logs.
+
+    :param episode: Episode number.
+    :param step: Time-step.
+    :param obs: Observation of the current environment.
+    :param reward: Reward from the current environment.
+    :param done: Indicates whether the episode ends or not.
+    :param info: Contains auxiliary diagnostic information (helpful for debugging, and sometimes learning).
+    :param action: An action provided by the agent.
+    """
+    capital = obs[0].item()
+    step_str = '{}-th step in {}-th episode / '.format(step, episode)
+    obs_str = 'obs: {} / '.format(capital)
+
+    result_str = step_str + obs_str
     logger.info(result_str)
 
 

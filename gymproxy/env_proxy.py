@@ -81,7 +81,7 @@ class EnvProxy(ABC):
             self._closing = True
             self._sync_gym_env()   # Resumes the actual environment and stops gym-type environment.
 
-    def get_obs_and_reward(self) -> (object, float, bool, dict):
+    def get_obs_and_reward(self) -> (object, float, bool,bool, dict):
         """Gets observation and reward from the actual environment. Called by gym-type environment.
 
         :return: Tuple of (observation, reward, done, info).
@@ -93,7 +93,7 @@ class EnvProxy(ABC):
         self._sync_gym_env()   # Resumes the actual environment, and then, waits until the actual environment stops.
 
         # Obtains a tuple of (observation, reward, done, info) after the actual environment stops.
-        return self._obs, self._reward, self._done, self._info
+        return self._obs, self._reward, self._done, self._done, self._info
 
     def get_obs(self) -> object:
         """Gets observation from the actual environment. Called by gym-type environment.

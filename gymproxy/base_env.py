@@ -3,38 +3,81 @@
 """Module including BaseEnv class.
 """
 
-import gym
+import gymnasium as gym
 from abc import *
 from gymproxy.env_proxy import EnvProxy
 from gymproxy.base_actual_env import BaseActualEnv
+
+from typing import TYPE_CHECKING, Any, Generic, SupportsFloat, TypeVar
+
+ObsType = TypeVar("ObsType")
+ActType = TypeVar("ActType")
+RenderFrame = TypeVar("RenderFrame")
 
 
 class BaseEnv(gym.Env, metaclass=ABCMeta):
     """Base class of gym-type environment.
     """
-    metadata = {'render.mode': ['human']}
+    metadata = {'render_modes': ['human']}
     actual_env_class = None
 
-    def __init__(self, **kwargs):
-        """Constructor.
+    # def __init__(self, env):
+    #     self.env = env
+    #
+    #     self._action_space = None
+    #     self._observation_space = None
+    #     self._reward_range = None
+    #     self._metadata = None
 
-        :param kwargs: Dictionary of keyword arguments for beginning the actual environment. It should include a
-        dictionary object indexed by 'config' keyword.
+    def __init__(self, **kwargs):
+        """Wraps an environment to allow a modular transformation of the :meth:`step` and :meth:`reset` methods.
+
+        Args:
+            env: The environment to wrap
         """
         config = kwargs['config']
+        # self.env = env
 
-        # Builds obs and action spaces.
-        obs_space = self.build_obs_space(config=config)
         action_space = self.build_action_space(config=config)
+        obs_space = self.build_obs_space(config=config)
+        self._reward_range: tuple[SupportsFloat, SupportsFloat] | None = None
+        self._metadata: dict[str, Any] | None = None
+
+        self._cached_spec: EnvSpec | None = None
 
         super().__init__()
-
-        # Initializes the environment proxy object.
         self._env_proxy = EnvProxy(self.init_actual_env, self.reset_actual_env, self.close_actual_env, **kwargs)
 
         self.observation_space = obs_space
         self.action_space = action_space
 
+    # def __init__(self, **kwargs):
+    #     """Constructor.
+    #
+    #     :param kwargs: Dictionary of keyword arguments for beginning the actual environment. It should include a
+    #     dictionary object indexed by 'config' keyword.
+    #     """
+    #     print("base_env __init__")
+    #     config = kwargs['config']
+    #
+    #     # Builds obs and action spaces.
+    #     obs_space = self.build_obs_space(config=config)
+    #     action_space = self.build_action_space(config=config)
+    #
+    #     super().__init__()
+    #
+    #     # Initializes the environment proxy object.
+    #     self._env_proxy = EnvProxy(self.init_actual_env, self.reset_actual_env, self.close_actual_env, **kwargs)
+    #
+    #     self.observation_space = obs_space
+    #     self.action_space = action_space
+
+    # def reset(
+    #     self,
+    #     *,
+    #     seed: int | None = None,
+    #     options: dict[str, Any] | None = None,
+    # ) -> tuple[ObsType, dict[str, Any]]:
     def reset(self) -> object:
         """Resets the environment to an initial state and returns an initial observation. See gym.core.Env.reset() for
         detailed description.

@@ -4,11 +4,11 @@
 R. S. Sutton and A. G. Barto, Reinforcement Learning - An Introduction, 2nd ed., 2018 (Example 4.3: Gambler's Problem).
 """
 
-import gym
+import gymnasium as gym
 import numpy as np
 
 from examples.gamblers_problem.actual_env import GamblersProblemActualEnv
-from gym.spaces import Box, Discrete
+from gymnasium.spaces import Box, Discrete
 from gymproxy import BaseEnv
 
 
@@ -20,6 +20,9 @@ class GamblersProblem(BaseEnv):
 
         :param kwargs: Dictionary of keyword arguments.
         """
+        print("class GamblersProblem(BaseEnv): __init__")
+        # seed = kwargs['seed']
+        # options = kwargs['options']
         BaseEnv.actual_env_class = GamblersProblemActualEnv
         super().__init__(**kwargs)
 
