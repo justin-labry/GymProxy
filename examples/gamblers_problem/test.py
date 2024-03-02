@@ -61,13 +61,15 @@ def main():
             action = env.action_space.sample()  # Means random agent
 
             # Amount of betting should be less than current capital.
-            action[0] = max(action[0].item(), obs[0].item())
+            action[0] = min(action[0].item(), obs[0].item())
 
             obs, reward, terminated, truncated, info = env.step(action)
             log_step(i, j, obs, reward, terminated, truncated, info, action)
             j = j + 1
             if terminated:
                 break
+
+    print("env.close()")
     env.close()
 
 

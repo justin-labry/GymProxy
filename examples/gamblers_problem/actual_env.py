@@ -87,7 +87,7 @@ class GamblersProblemActualEnv(BaseActualEnv):
             obs = np.array([self._s], dtype=np.int32)
             done = True
             GamblersProblemActualEnv.set_obs_and_reward(obs, self._reward, terminated, truncated, info)
-            print("class GamblersProblemActualEnv(BaseActualEnv): run2")
+            print("class GamblersProblemActualEnv(BaseActualEnv): run2\n")
 
         # Exception handling block.
         except TerminateGymProxy:
