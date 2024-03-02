@@ -47,28 +47,31 @@ def main():
               'prob_head': PROB_HEAD,
               'initial_capital': INITIAL_CAPITAL,
               'winning_capital': WINNING_CAPITAL}
-    env = gym.make(id='GamblersProblem-v0', config=config)
+
+    metadata_ = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
+    env = gym.make(id='GamblersProblem-v0', config=config, metadata=metadata_)
     # obs = env.reset()
-    # for i in range(0, NUM_EPISODES):
-    #     j = 0
-    #     obs,info = env.reset()
-    #     log_reset(0, 0, obs)
-    #     while True:
-    #         env.render()
-    #         action = env.action_space.sample()  # Means random agent
-    #
-    #         # Amount of betting should be less than current capital.
-    #         action[0] = min(action[0].item(), obs[0].item())
-    #
-    #         obs, reward, terminated, trucated, info = env.step(action)
-    #         log_step(i, j, obs, reward, terminated, info, action)
-    #         j = j + 1
-    #         if terminated:
-    #             break
+    # print(obs)
+    for i in range(0, NUM_EPISODES):
+        j = 0
+        obs, info = env.reset(seed=123, options={})
+        log_reset(0, 0, obs, info)
+        while True:
+            env.render()
+            action = env.action_space.sample()  # Means random agent
+
+            # Amount of betting should be less than current capital.
+            action[0] = max(action[0].item(), obs[0].item())
+
+            obs, reward, terminated, truncated, info = env.step(action)
+            log_step(i, j, obs, reward, terminated, truncated, info, action)
+            j = j + 1
+            if terminated:
+                break
     env.close()
 
 
-def log_step(episode: int, step: int, obs: np.ndarray, reward: float, done: bool, info: dict, action: np.ndarray):
+def log_step(episode: int, step: int, obs: np.ndarray, reward: float, terminated: bool, truncated: bool, info: dict, action: np.ndarray):
     """Utility function for printing logs.
 
     :param episode: Episode number.
@@ -84,13 +87,14 @@ def log_step(episode: int, step: int, obs: np.ndarray, reward: float, done: bool
     step_str = '{}-th step in {}-th episode / '.format(step, episode)
     obs_str = 'obs: {} / '.format(capital)
     reward_str = 'reward: {} / '.format(reward)
-    done_str = 'done: {} / '.format(done)
+    terminated_str = 'terminated: {} / '.format(terminated)
+    truncated_str = 'truncated: {} / '.format(truncated)
     info_str = 'info: {} / '.format(info)
     action_str = 'action: {}'.format(bet)
-    result_str = step_str + obs_str + reward_str + done_str + info_str + action_str
+    result_str = step_str + obs_str + reward_str + terminated_str + truncated_str + info_str + action_str
     logger.info(result_str)
 
-def log_reset(episode: int, step: int, obs: np.ndarray):
+def log_reset(episode: int, step: int, obs: np.ndarray, info: dict):
     """Utility function for printing logs.
 
     :param episode: Episode number.
@@ -102,10 +106,11 @@ def log_reset(episode: int, step: int, obs: np.ndarray):
     :param action: An action provided by the agent.
     """
     capital = obs[0].item()
+    info_str = 'info: {} / '.format(info)
     step_str = '{}-th step in {}-th episode / '.format(step, episode)
     obs_str = 'obs: {} / '.format(capital)
 
-    result_str = step_str + obs_str
+    result_str = step_str + obs_str + info_str
     logger.info(result_str)
 
 
