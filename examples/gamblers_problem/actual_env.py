@@ -40,7 +40,7 @@ class GamblersProblemActualEnv(BaseActualEnv):
         self._reward = 0.
         self._t = 0
 
-        self._metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
+        # self._metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
 
         # self.seed = kwargs['seed']
         # self.options = kwargs['options']
@@ -52,13 +52,13 @@ class GamblersProblemActualEnv(BaseActualEnv):
         """
         try:
             print("class GamblersProblemActualEnv(BaseActualEnv): run1")
-            terminated = False
-            truncated = False
+            self._terminated = False
+            self._truncated = False
 
             info = {}
-            while self._t < self._num_steps and not terminated:
+            while self._t < self._num_steps and not self._terminated:
                 obs = np.array([self._s], dtype=np.int32)     # Observation is current capital.
-                action = GamblersProblemActualEnv.get_action(obs, self._reward, terminated,False, info)
+                action = GamblersProblemActualEnv.get_action(obs, self._reward, self._terminated, self._truncated, info)
                 info = {}
 
                 # Amount of betting should be less than difference between the winning and current capitals.
@@ -75,18 +75,22 @@ class GamblersProblemActualEnv(BaseActualEnv):
                 # Checks if the gambler wins or not.
                 if self._s >= self._s_win:
                     info['msg'] = 'Wins the game because the capital becomes {} dollars.'.format(self._s)
-                    terminated = True
+                    # self._closing = True
+                    self._terminated = True
+                    self._truncated = True
                     self._reward = 1.
                 elif self._s <= 0.:
                     info['msg'] = 'Loses the game due to out of money.'
-                    terminated = True
+                    # self._closing = True
+                    self._terminated = True
+                    self._truncated = True
 
                 self._t += 1
 
             # Arrives to the end of the episode (terminal state).
             obs = np.array([self._s], dtype=np.int32)
             done = True
-            GamblersProblemActualEnv.set_obs_and_reward(obs, self._reward, terminated, truncated, info)
+            GamblersProblemActualEnv.set_obs_and_reward(obs, self._reward, self._terminated, self._truncated, info)
             print("class GamblersProblemActualEnv(BaseActualEnv): run2\n")
 
         # Exception handling block.
@@ -107,4 +111,6 @@ class GamblersProblemActualEnv(BaseActualEnv):
 
         :param kwargs: Dictionary of keyword arguments.
         """
+        print('finish')
+        # exit(1)
         return

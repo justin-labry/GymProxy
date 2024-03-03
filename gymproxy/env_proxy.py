@@ -46,7 +46,7 @@ class EnvProxy(ABC):
         self._truncated = None
         self._info = None
 
-        self._metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
+        # self._metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
 
     def reset_actual_env(self):
         """Resets the actual environment.

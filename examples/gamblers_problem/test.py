@@ -43,13 +43,15 @@ NUM_EPISODES = 1
 def main():
     """Main routine of testing GamblersProblem gym-type environment.
     """
+    metadata_ = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
     config = {'num_steps': NUM_STEPS,
               'prob_head': PROB_HEAD,
               'initial_capital': INITIAL_CAPITAL,
-              'winning_capital': WINNING_CAPITAL}
+              'winning_capital': WINNING_CAPITAL,
+              'metadata': metadata_}
 
-    metadata_ = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
-    env = gym.make(id='GamblersProblem-v0', config=config, metadata=metadata_)
+
+    env = gym.make(id='GamblersProblem-v0', config=config)
     # obs = env.reset()
     # print(obs)
     for i in range(0, NUM_EPISODES):
@@ -66,7 +68,7 @@ def main():
             obs, reward, terminated, truncated, info = env.step(action)
             log_step(i, j, obs, reward, terminated, truncated, info, action)
             j = j + 1
-            if terminated:
+            if terminated or truncated:
                 break
 
     print("env.close()")
