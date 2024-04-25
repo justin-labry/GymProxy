@@ -1,3 +1,4 @@
+# Author: Sae Hyong Park <labry@etri.re.kr>
 # Author: Seungjae Shin <sjshin0505@{etri.re.kr, gmail.com}>
 
 """Gym-type environment for simulating gambler's problem example. It is implemented based on the following reference:

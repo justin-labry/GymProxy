@@ -1,3 +1,4 @@
+# Author: Sae Hyong Park <labry@etri.re.kr>
 # Author: Seungjae Shin <sjshin0505@{etri.re.kr, gmail.com}>
 
 """Package for simulating Jack's car rental example described in the following reference:

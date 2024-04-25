@@ -1,3 +1,4 @@
+# Author: Sae Hyong Park <labry@etri.re.kr>
 # Author: Seungjae Shin <sjshin0505@{etri.re.kr, gmail.com}>
 
 """Gym-type environment for simulating an access control example in a simple queuing system. It is implemented based on

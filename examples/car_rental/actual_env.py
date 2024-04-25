@@ -1,3 +1,4 @@
+# Author: Sae Hyong Park <labry@etri.re.kr>
 # Author: Seungjae Shin <sjshin0505@{etri.re.kr, gmail.com}>
 
 """External environment for actually simulating Jack's car rental example. It is implemented based on the following
@@ -85,8 +86,8 @@ class CarRentalActualEnv(BaseActualEnv):
                     msg += '.'
 
 
-                logger.info("***** obs: {}".format(obs))
-                logger.info("..... self._available_cars0: {} self._available_cars1 {}".format(self._available_cars[0], self._available_cars[1]))
+                logger.debug("***** obs: {}".format(obs))
+                logger.debug("..... self._available_cars0: {} self._available_cars1 {}".format(self._available_cars[0], self._available_cars[1]))
                 # Rents cars for requests at each location.
                 self._available_cars[0] = max(self._available_cars[0] - n_req_0, 0)
                 self._available_cars[1] = max(self._available_cars[1] - n_req_1, 0)
@@ -95,7 +96,7 @@ class CarRentalActualEnv(BaseActualEnv):
 
                 obs = np.array(self._available_cars, dtype=np.int32)
 
-                logger.info("----- obs: {}".format(obs))
+                logger.debug("----- obs: {}".format(obs))
 
                 # A number of notes in the information dictionary.
                 info['rental_requests'] = [n_req_0, n_req_1]
@@ -110,8 +111,8 @@ class CarRentalActualEnv(BaseActualEnv):
 
                 # Action consists of source location, from which cars should be moved, and number of cars to be moved.
                 action = CarRentalActualEnv.get_action(obs, self._reward, terminated, truncated, info)
-                print("action:", action)
-                print("type:", type(action))
+                # print("action:", action)
+                # print("type:", type(action))
                 src = action[0]
                 dst = 1 - src
                 n_moving = action[1].item()
@@ -128,8 +129,8 @@ class CarRentalActualEnv(BaseActualEnv):
                 self._available_cars[src] = max(self._available_cars[src] - n_moving, 0)
                 self._available_cars[dst] = min(self._available_cars[dst] + n_moving, self._max_num_cars_per_loc)
 
-                logger.info("returned n_return_0={}, n_return_1={}".format(n_return_0, n_return_1))
-                logger.info("action {} available".format(action))
+                logger.debug("returned n_return_0={}, n_return_1={}".format(n_return_0, n_return_1))
+                logger.debug("action {} available".format(action))
 
                 info['returns'] = [n_return_0, n_return_1]  # Note returns in the information dictionary.
 
@@ -158,5 +159,5 @@ class CarRentalActualEnv(BaseActualEnv):
 
         :param kwargs: Dictionary of keyword arguments.
         """
-        print("finish")
+        #print("finish")
         return

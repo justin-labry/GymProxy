@@ -40,7 +40,7 @@ def main():
     #print("env", env)
     obs, info = env.reset(seed=126, options={})
     log_step(0, 0, obs, 0.0, False, False, info, {})
-    print(obs)
+    #print(obs)
 
     capital = INITIAL_CAPITAL
 
@@ -55,7 +55,7 @@ def main():
 
             # Amount of betting should be less than current capital.
             action = min(obs[0].item(), WINNING_CAPITAL - capital)
-            print(action, obs[0].item(), WINNING_CAPITAL-capital)
+            #print(action, obs[0].item(), WINNING_CAPITAL-capital)
 
             obs, reward, terminated, truncated, info = env.step(action)
 

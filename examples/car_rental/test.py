@@ -43,12 +43,12 @@ def main():
               'return_rate_1': RETURN_RATE_1}
 
     env = gym.make(id='CarRental-v0', config=config)
-    print("env:", env)
+    #print("env:", env)
     for i in range(0, NUM_EPISODES):
         j = 0
-        print("before obs, info")
+        #print("before obs, info")
         obs, info = env.reset(seed=147, options={})
-        print("obs, info:", obs,info)
+        #print("obs, info:", obs,info)
         logger.info(str(obs)+ str(info))
         while True:
             env.render()
