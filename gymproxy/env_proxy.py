@@ -2,12 +2,15 @@
 
 """Module including EnvProxy class.
 """
-
+import logging
 from abc import *
 from concurrent.futures import ThreadPoolExecutor
 from threading import Event, Lock
 from typing import Optional
 import numpy as np
+import time
+
+logger = logging.getLogger('EnvProxy')
 
 def singleton(class_):
     instances = {}
@@ -205,7 +208,11 @@ class EnvProxy(ABC):
         # Wait during the gym-type environment is active.
         if not terminated:
             #print("if not terminated")
+            logger.info("_sync_actual_env before self._actual_env_event.wait(): {}".format(0))
+            start_time = time.time()
             self._actual_env_event.wait()
+            end_time = time.time()
+            logger.info("_sync_actual_env after self._actual_env_event.wait(): {}".format(end_time - start_time))
             self._lock.acquire()
 
     def _sync_gym_env(self):
@@ -218,5 +225,9 @@ class EnvProxy(ABC):
         self._lock.release()
 
         # Waits during the actual environment is active.
+        logger.info(" _sync_gym_env before self._gym_env_event.wait(): {}".format(0))
+        start_time = time.time()
         self._gym_env_event.wait()
+        end_time = time.time()
+        logger.info(" _sync_gym_env after self._gym_env_event.wait(): {}".format(end_time - start_time))
         self._lock.acquire()
