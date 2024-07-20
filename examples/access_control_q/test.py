@@ -47,9 +47,9 @@ def main():
         while True:
             env.render()
             action = env.action_space.sample()  # Means random agent.
-            start_time = time.time()
+            start_time = time.perf_counter()
             obs, reward, terminated, truncated, info = env.step(action)
-            end_time = time.time()
+            end_time = time.perf_counter()
             accumulated_elpased_time += end_time - start_time
             logger.info("elapsed time: " + str(end_time - start_time))
             accumulated_result += reward
