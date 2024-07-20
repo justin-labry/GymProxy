@@ -80,6 +80,7 @@ class EnvProxy(ABC):
 
         if not self._lock.locked():
             self._lock.acquire()
+            self._lock.release()
 
         self._closing = False
 
@@ -199,14 +200,15 @@ class EnvProxy(ABC):
         self._gym_env_event.set()
         #print("_sync_actual_env called 2")
         #print("self._lock ", self._lock)
-        self._lock.release()
+        if terminated:
+            self._lock.release()
         #print("_sync_actual_env called 3")
 
         # Wait during the gym-type environment is active.
         if not terminated:
             #print("if not terminated")
             self._actual_env_event.wait()
-            self._lock.acquire()
+            #self._lock.acquire()
 
     def _sync_gym_env(self):
         """Resumes the actual environment and wait for its next stop. Called by the gym-type environment.
@@ -215,8 +217,8 @@ class EnvProxy(ABC):
         #print("_sync_gem_env called")
         self._gym_env_event.clear()
         self._actual_env_event.set()
-        self._lock.release()
+        #self._lock.release()
 
         # Waits during the actual environment is active.
         self._gym_env_event.wait()
-        self._lock.acquire()
+        #self._lock.acquire()

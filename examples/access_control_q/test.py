@@ -7,6 +7,8 @@ Queuing Task).
 """
 
 import logging
+import time
+
 import numpy as np
 
 from examples.access_control_q import *
@@ -24,7 +26,7 @@ NUM_SERVERS = 10
 SERVER_FREE_PROB = 0.06
 PRIORITIES = [1., 2., 4., 8.]
 
-NUM_EPISODES = 100
+NUM_EPISODES = 1
 
 
 def main():
@@ -37,6 +39,7 @@ def main():
 
     env = gym.make(id='AccessControlQueue-v0', config=config)
     accumulated_result = 0
+    accumulated_elpased_time = 0
     for i in range(0, NUM_EPISODES):
         j = 0
         obs, info = env.reset(seed=126, options={})
@@ -44,7 +47,11 @@ def main():
         while True:
             env.render()
             action = env.action_space.sample()  # Means random agent.
+            start_time = time.time()
             obs, reward, terminated, truncated, info = env.step(action)
+            end_time = time.time()
+            accumulated_elpased_time += end_time - start_time
+            logger.info("elapsed time: " + str(end_time - start_time))
             accumulated_result += reward
 
             log_step(i, j, obs, reward, terminated, info, action)
@@ -53,6 +60,7 @@ def main():
                 break
 
     logger.info("Accumulated result: " + str(accumulated_result))
+    logger.info("Accumulated elpased_time: " + str(accumulated_elpased_time))
     env.close()
 
 
