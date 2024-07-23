@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
 import argparse
-import time
+import logging
 
 import numpy as np
 from ray.rllib.env.policy_client import PolicyClient
-import logging
 
 # Setting logger
 FORMAT = "[%(asctime)s|%(levelname)s|%(name)s] %(message)s"
@@ -62,14 +61,15 @@ class AccessControlSimulator:
                 self._server_states[i] = 'free'
 
         self._t += 1
+        logger.info("self._t: {}".format(self._t))
         self._accumulated_reward += self._reward
         terminated = self._t >= self._num_steps
 
         if terminated:
             #self._reward = 0xabc
-            print("self._t {} terminated".format(self._t))
-            self.cnt = self.cnt +1
-            print("counter: {}".format(self.cnt))
+            # print("self._t {} terminated".format(self._t))
+            # self.cnt = self.cnt + self._t
+            # print("counter: {}".format(self.cnt))
             # if(self.cnt == 40*10):
             #     end = time.time()
             #     print("end time: {}".format(end-start))
@@ -126,6 +126,7 @@ if __name__ == "__main__":
     eid = client.start_episode(training_enabled=not args.no_train)
 
     rewards = 0.0
+    i = 0
     while True:
         # Compute an action randomly (off-policy) and log it.
         if args.off_policy:
@@ -145,8 +146,9 @@ if __name__ == "__main__":
 
         # Reset the episode if done.
         if terminated:
+            i+=1
             logger.info("Total reward: {}".format(rewards))
-            if rewards >= args.stop_reward:
+            if rewards >= args.stop_reward or i >= 13:
                 logger.info("Target reward achieved, exiting")
                 exit(0)
 

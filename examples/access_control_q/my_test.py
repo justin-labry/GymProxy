@@ -31,7 +31,7 @@ tune.run("PPO",
                  # Each episode uses different shop params. Need lots of samples to gauge agent's performance
                  "evaluation_duration_unit": 1000,
                  "normalize_actions": False,
-                 # "seed": 42,
+                 "seed": 42,
                  #"clip_actions": True,
                  },
          # keep_checkpoints_num=100,

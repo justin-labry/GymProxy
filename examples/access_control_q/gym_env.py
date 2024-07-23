@@ -13,7 +13,7 @@ import numpy as np
 
 from examples.access_control_q.actual_env import AccessControlQueueActualEnv
 from gymnasium.spaces import Box, Discrete
-from gymproxy import BaseEnv
+from gymproxy.base_env import BaseEnv
 
 logger = logging.getLogger('access-control-q')
 
